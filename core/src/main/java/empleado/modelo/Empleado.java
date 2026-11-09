@@ -37,10 +37,19 @@ public class Empleado {
             Puesto puesto,
             BigDecimal salario
     ) {
-        if (id == null) {
-            throw new CampoObligatorioException("id");
-        }
+        requerido(id, "id");
+        requerido(nombreCompleto, "nombreCompleto");
+        requerido(legajo, "legajo");
+        requerido(fechaIngreso, "fechaIngreso");
+        requerido(puesto, "puesto");
+        requerido(salario, "salario");
         return new Empleado(id, nombreCompleto, legajo, fechaIngreso, puesto, salario);
+    }
+
+    private static void requerido(Object valor, String campo) {
+        if (valor == null) {
+            throw new CampoObligatorioException(campo);
+        }
     }
 
     public UUID getId() {

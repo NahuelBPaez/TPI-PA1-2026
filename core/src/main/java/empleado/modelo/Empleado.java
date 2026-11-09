@@ -1,5 +1,6 @@
 package empleado.modelo;
 
+import empleado.exception.CampoObligatorioException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -36,6 +37,9 @@ public class Empleado {
             Puesto puesto,
             BigDecimal salario
     ) {
+        if (id == null) {
+            throw new CampoObligatorioException("id");
+        }
         return new Empleado(id, nombreCompleto, legajo, fechaIngreso, puesto, salario);
     }
 

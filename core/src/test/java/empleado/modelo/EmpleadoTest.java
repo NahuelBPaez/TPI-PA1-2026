@@ -1,7 +1,11 @@
 package empleado.modelo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import empleado.exception.CampoObligatorioException;
+import empleado.exception.EmpleadoInvalidoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -34,5 +38,23 @@ class EmpleadoTest {
         assertEquals(fechaIngreso, empleado.getFechaIngreso());
         assertEquals(puesto, empleado.getPuesto());
         assertEquals(salario, empleado.getSalario());
+    }
+
+    @Test
+    void noSeCreaUnEmpleadoSinId() {
+        CampoObligatorioException excepcion = assertThrows(
+                CampoObligatorioException.class,
+                () -> Empleado.instance(
+                        null,
+                        "Ana Pérez",
+                        "ABC1234",
+                        LocalDate.now().minusDays(1),
+                        Puesto.ANALISTA,
+                        new BigDecimal("500000")
+                )
+        );
+
+        assertEquals("id", excepcion.getCampo());
+        assertInstanceOf(EmpleadoInvalidoException.class, excepcion);
     }
 }

@@ -1,6 +1,7 @@
 package empleado.modelo;
 
 import empleado.exception.CampoObligatorioException;
+import empleado.exception.FechaIngresoInvalidaException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -43,6 +44,9 @@ public class Empleado {
         requerido(fechaIngreso, "fechaIngreso");
         requerido(puesto, "puesto");
         requerido(salario, "salario");
+        if (fechaIngreso.isAfter(LocalDate.now())) {
+            throw new FechaIngresoInvalidaException();
+        }
         return new Empleado(id, nombreCompleto, legajo, fechaIngreso, puesto, salario);
     }
 

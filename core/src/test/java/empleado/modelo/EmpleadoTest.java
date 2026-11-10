@@ -137,4 +137,35 @@ class EmpleadoTest {
                 )
         );
     }
+
+    @ParameterizedTest(name = "{0} en blanco: [{1}][{2}]")
+    @MethodSource("textosEnBlanco")
+    void noSeCreaUnEmpleadoConTextosEnBlanco(
+            String campoEsperado,
+            String nombreCompleto,
+            String legajo
+    ) {
+        CampoObligatorioException excepcion = assertThrows(
+                CampoObligatorioException.class,
+                () -> Empleado.instance(
+                        UUID.randomUUID(),
+                        nombreCompleto,
+                        legajo,
+                        LocalDate.now().minusDays(1),
+                        Puesto.ANALISTA,
+                        new BigDecimal("500000")
+                )
+        );
+
+        assertEquals(campoEsperado, excepcion.getCampo());
+    }
+
+    static Stream<Arguments> textosEnBlanco() {
+        return Stream.of(
+                Arguments.of("nombreCompleto", "", "ABC1234"),
+                Arguments.of("nombreCompleto", "   ", "ABC1234"),
+                Arguments.of("legajo", "Ana Pérez", ""),
+                Arguments.of("legajo", "Ana Pérez", "   ")
+        );
+    }
 }

@@ -3,6 +3,7 @@ package empleado.modelo;
 import empleado.exception.CampoObligatorioException;
 import empleado.exception.FechaIngresoInvalidaException;
 import empleado.exception.LegajoInvalidoException;
+import empleado.exception.SalarioInvalidoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -50,6 +51,9 @@ public class Empleado {
         }
         if (!legajo.matches("[A-Z]{3}[0-9]{4}")) {
             throw new LegajoInvalidoException(legajo);
+        }
+        if (salario.signum() <= 0) {
+            throw new SalarioInvalidoException();
         }
         return new Empleado(id, nombreCompleto, legajo, fechaIngreso, puesto, salario);
     }

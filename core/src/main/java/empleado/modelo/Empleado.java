@@ -38,8 +38,8 @@ public class Empleado {
             BigDecimal salario
     ) {
         requerido(id, "id");
-        requerido(nombreCompleto, "nombreCompleto");
-        requerido(legajo, "legajo");
+        requeridoTexto(nombreCompleto, "nombreCompleto");
+        requeridoTexto(legajo, "legajo");
         requerido(fechaIngreso, "fechaIngreso");
         requerido(puesto, "puesto");
         requerido(salario, "salario");
@@ -48,6 +48,12 @@ public class Empleado {
 
     private static void requerido(Object valor, String campo) {
         if (valor == null) {
+            throw new CampoObligatorioException(campo);
+        }
+    }
+
+    private static void requeridoTexto(String valor, String campo) {
+        if (valor == null || valor.isBlank()) {
             throw new CampoObligatorioException(campo);
         }
     }

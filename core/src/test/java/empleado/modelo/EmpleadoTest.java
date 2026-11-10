@@ -9,6 +9,7 @@ import empleado.exception.CampoObligatorioException;
 import empleado.exception.EmpleadoInvalidoException;
 import empleado.exception.FechaIngresoInvalidaException;
 import empleado.exception.LegajoInvalidoException;
+import empleado.exception.SalarioInvalidoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -235,6 +236,24 @@ class EmpleadoTest {
                         LocalDate.now().minusDays(1),
                         Puesto.ANALISTA,
                         new BigDecimal("500000")
+                )
+        );
+
+        assertInstanceOf(EmpleadoInvalidoException.class, excepcion);
+    }
+
+    @ParameterizedTest(name = "salario [{0}]")
+    @ValueSource(strings = {"0", "0.00", "-1", "-500000"})
+    void noSeCreaUnEmpleadoConSalarioNoPositivo(String valor) {
+        SalarioInvalidoException excepcion = assertThrows(
+                SalarioInvalidoException.class,
+                () -> Empleado.instance(
+                        UUID.randomUUID(),
+                        "Ana Pérez",
+                        "ABC1234",
+                        LocalDate.now().minusDays(1),
+                        Puesto.ANALISTA,
+                        new BigDecimal(valor)
                 )
         );
 

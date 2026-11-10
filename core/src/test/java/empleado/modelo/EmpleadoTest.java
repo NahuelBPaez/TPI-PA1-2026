@@ -2,10 +2,12 @@ package empleado.modelo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import empleado.exception.CampoObligatorioException;
 import empleado.exception.EmpleadoInvalidoException;
+import empleado.exception.FechaIngresoInvalidaException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -167,5 +169,46 @@ class EmpleadoTest {
                 Arguments.of("legajo", "Ana Pérez", ""),
                 Arguments.of("legajo", "Ana Pérez", "   ")
         );
+    }
+
+    @ParameterizedTest
+    @MethodSource("fechasDeIngresoValidas")
+    void seAceptaFechaDeIngresoHoyOAnterior(LocalDate fechaIngreso) {
+        Empleado empleado = assertDoesNotThrow(
+                () -> Empleado.instance(
+                        UUID.randomUUID(),
+                        "Ana Pérez",
+                        "ABC1234",
+                        fechaIngreso,
+                        Puesto.ANALISTA,
+                        new BigDecimal("500000")
+                )
+        );
+
+        assertEquals(fechaIngreso, empleado.getFechaIngreso());
+    }
+
+    static Stream<LocalDate> fechasDeIngresoValidas() {
+        return Stream.of(
+                LocalDate.now(),
+                LocalDate.now().minusDays(1)
+        );
+    }
+
+    @Test
+    void noSeCreaUnEmpleadoConFechaDeIngresoFutura() {
+        FechaIngresoInvalidaException excepcion = assertThrows(
+                FechaIngresoInvalidaException.class,
+                () -> Empleado.instance(
+                        UUID.randomUUID(),
+                        "Ana Pérez",
+                        "ABC1234",
+                        LocalDate.now().plusDays(1),
+                        Puesto.ANALISTA,
+                        new BigDecimal("500000")
+                )
+        );
+
+        assertInstanceOf(EmpleadoInvalidoException.class, excepcion);
     }
 }

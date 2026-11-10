@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import empleado.exception.CampoObligatorioException;
 import empleado.exception.EmpleadoInvalidoException;
 import empleado.exception.FechaIngresoInvalidaException;
+import empleado.exception.LegajoInvalidoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class EmpleadoTest {
 
@@ -204,6 +206,33 @@ class EmpleadoTest {
                         "Ana Pérez",
                         "ABC1234",
                         LocalDate.now().plusDays(1),
+                        Puesto.ANALISTA,
+                        new BigDecimal("500000")
+                )
+        );
+
+        assertInstanceOf(EmpleadoInvalidoException.class, excepcion);
+    }
+
+    @ParameterizedTest(name = "legajo [{0}]")
+    @ValueSource(strings = {
+            "abc1234",
+            "AB1234",
+            "ABCD1234",
+            "ABC123",
+            "ABC12345",
+            "AB1C234",
+            "1234ABC",
+            " ABC1234"
+    })
+    void noSeCreaUnEmpleadoConLegajoConFormatoInvalido(String legajo) {
+        LegajoInvalidoException excepcion = assertThrows(
+                LegajoInvalidoException.class,
+                () -> Empleado.instance(
+                        UUID.randomUUID(),
+                        "Ana Pérez",
+                        legajo,
+                        LocalDate.now().minusDays(1),
                         Puesto.ANALISTA,
                         new BigDecimal("500000")
                 )

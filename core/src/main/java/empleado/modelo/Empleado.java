@@ -4,6 +4,7 @@ import empleado.exception.CampoObligatorioException;
 import empleado.exception.FechaIngresoInvalidaException;
 import empleado.exception.LegajoInvalidoException;
 import empleado.exception.SalarioInvalidoException;
+import empleado.exception.SalarioBajoPisoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -54,6 +55,9 @@ public class Empleado {
         }
         if (salario.signum() <= 0) {
             throw new SalarioInvalidoException();
+        }
+        if (salario.compareTo(puesto.salarioMinimo()) < 0) {
+            throw new SalarioBajoPisoException(puesto, puesto.salarioMinimo());
         }
         return new Empleado(id, nombreCompleto, legajo, fechaIngreso, puesto, salario);
     }

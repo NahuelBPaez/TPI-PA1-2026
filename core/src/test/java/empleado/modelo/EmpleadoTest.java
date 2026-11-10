@@ -311,4 +311,31 @@ class EmpleadoTest {
                 Arguments.of(Puesto.GERENTE, "1199999")
         );
     }
+
+    @ParameterizedTest(name = "{0} con {1}")
+    @MethodSource("salariosValidosParaPuestoInferior")
+    void unSalarioValidoParaUnPuestoPuedeSerInvalidoParaOtroSuperior(
+            Puesto puesto,
+            String valor
+    ) {
+        assertThrows(
+                SalarioBajoPisoException.class,
+                () -> Empleado.instance(
+                        UUID.randomUUID(),
+                        "Ana Pérez",
+                        "ABC1234",
+                        LocalDate.now().minusDays(1),
+                        puesto,
+                        new BigDecimal(valor)
+                )
+        );
+    }
+
+    static Stream<Arguments> salariosValidosParaPuestoInferior() {
+        return Stream.of(
+                Arguments.of(Puesto.SUPERVISOR, "500000"),
+                Arguments.of(Puesto.GERENTE, "500000"),
+                Arguments.of(Puesto.GERENTE, "800000")
+        );
+    }
 }

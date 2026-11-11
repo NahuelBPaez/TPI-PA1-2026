@@ -14,6 +14,6 @@ public class ListarEmpleadosUseCase implements ListarEmpleadosInput {
 
     @Override
     public List<Empleado> listar() {
-        throw new UnsupportedOperationException();
+        return empleadoRepository.listar();
     }
 }

@@ -7,6 +7,8 @@ import empleado.input.BuscarEmpleadoPorLegajoInput;
 import empleado.input.CrearEmpleadoInput;
 import empleado.input.ListarEmpleadosInput;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,16 +39,24 @@ public class EmpleadoController {
 
     @PostMapping
     public ResponseEntity<EmpleadoResponse> crear(@RequestBody EmpleadoRequest request) {
-        throw new UnsupportedOperationException();
+        EmpleadoResponse response = empleadoWebMapper.aRespuesta(
+                crearEmpleadoInput.crear(empleadoWebMapper.aComando(request))
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{legajo}")
-    public ResponseEntity<EmpleadoResponse> buscar(@PathVariable String legajo) {
-        throw new UnsupportedOperationException();
+    public ResponseEntity<EmpleadoResponse> buscar(@PathVariable("legajo") String legajo) {
+        return ResponseEntity.ok(
+                empleadoWebMapper.aRespuesta(buscarEmpleadoPorLegajoInput.buscar(legajo))
+        );
     }
 
     @GetMapping
     public ResponseEntity<List<EmpleadoResponse>> listar() {
-        throw new UnsupportedOperationException();
+        List<EmpleadoResponse> respuestas = listarEmpleadosInput.listar().stream()
+                .map(empleadoWebMapper::aRespuesta)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(respuestas);
     }
 }

@@ -7,10 +7,23 @@ import empleado.modelo.Empleado;
 
 public class EmpleadoWebMapper {
     public CrearEmpleadoComando aComando(EmpleadoRequest request) {
-        throw new UnsupportedOperationException();
+        return new CrearEmpleadoComando(
+                request.nombreCompleto(),
+                request.legajo(),
+                request.fechaIngreso(),
+                request.puesto(),
+                request.salario()
+        );
     }
 
     public EmpleadoResponse aRespuesta(Empleado empleado) {
-        throw new UnsupportedOperationException();
+        return new EmpleadoResponse(
+                empleado.getId(),
+                empleado.getNombreCompleto(),
+                empleado.getLegajo(),
+                empleado.getFechaIngreso(),
+                empleado.getPuesto(),
+                empleado.getSalario()
+        );
     }
 }

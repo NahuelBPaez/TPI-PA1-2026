@@ -23,21 +23,28 @@ public class EmpleadoRepoImplementacion implements EmpleadoRepository {
 
     @Override
     public boolean existePorLegajo(String legajo) {
-        throw new UnsupportedOperationException();
+        return empleadoCrudRepository.existsByLegajo(legajo);
     }
 
     @Override
     public Optional<Empleado> buscarPorLegajo(String legajo) {
-        throw new UnsupportedOperationException();
+        return empleadoCrudRepository.findByLegajo(legajo).map(empleadoDataMapper::aDominio);
     }
 
     @Override
     public boolean guardar(Empleado empleado) {
-        throw new UnsupportedOperationException();
+        try {
+            empleadoCrudRepository.save(empleadoDataMapper.aEntidad(empleado));
+            return true;
+        } catch (RuntimeException exception) {
+            return false;
+        }
     }
 
     @Override
     public List<Empleado> listar() {
-        throw new UnsupportedOperationException();
+        return empleadoCrudRepository.findAll().stream()
+                .map(empleadoDataMapper::aDominio)
+                .toList();
     }
 }

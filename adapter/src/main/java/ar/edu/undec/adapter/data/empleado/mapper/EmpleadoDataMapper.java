@@ -5,10 +5,24 @@ import empleado.modelo.Empleado;
 
 public class EmpleadoDataMapper {
     public EmpleadoEntity aEntidad(Empleado empleado) {
-        throw new UnsupportedOperationException();
+        return new EmpleadoEntity(
+                empleado.getId(),
+                empleado.getNombreCompleto(),
+                empleado.getLegajo(),
+                empleado.getFechaIngreso(),
+                empleado.getPuesto(),
+                empleado.getSalario()
+        );
     }
 
     public Empleado aDominio(EmpleadoEntity entidad) {
-        throw new UnsupportedOperationException();
+        return Empleado.instance(
+                entidad.getId(),
+                entidad.getNombreCompleto(),
+                entidad.getLegajo(),
+                entidad.getFechaIngreso(),
+                entidad.getPuesto(),
+                entidad.getSalario()
+        );
     }
 }
